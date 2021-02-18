@@ -1,6 +1,8 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { Ship } from "../store/types";
+import { Ship } from "../store/starships/types";
+import { StoreState } from "../store/types";
 
 interface ShipItemProps {
   item: Ship;
@@ -39,21 +41,20 @@ const ShipItem: React.FC<ShipItemProps> = ({ item }) => (
   </div>
 );
 
-interface ShipListProps {
-  data: Ship[];
-}
-
-const ShipList: React.FC<ShipListProps> = ({ data }) => (
-  <div>
-    <StyledContainer>
-      <div className="image"></div>
-      <p className="name">Name</p>
-      <p className="stops">Stops</p>
-    </StyledContainer>
-    {data.map((item, index) => (
-      <ShipItem key={index} item={item} />
-    ))}
-  </div>
-);
+const ShipList: React.FC = () => {
+  const ships = useSelector((state: StoreState) => state.starships.ships);
+  return (
+    <div>
+      <StyledContainer>
+        <div className="image"></div>
+        <p className="name">Name</p>
+        <p className="stops">Stops</p>
+      </StyledContainer>
+      {ships.map((item, index) => (
+        <ShipItem key={index} item={item} />
+      ))}
+    </div>
+  );
+};
 
 export default ShipList;

@@ -1,6 +1,8 @@
 import React from "react";
+import { Provider } from "react-redux";
 import { createGlobalStyle } from "styled-components";
 import Home from "./pages/Home";
+import store from "./store";
 
 const GlobalStyle = createGlobalStyle`
 
@@ -23,8 +25,10 @@ const GlobalStyle = createGlobalStyle`
 function App() {
   return (
     <div>
-      <GlobalStyle />
-      <Home />
+      <Provider store={store}>
+        <GlobalStyle />
+        <Home />
+      </Provider>
     </div>
   );
 }
