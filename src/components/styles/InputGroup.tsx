@@ -1,9 +1,10 @@
-import React, { HtmlHTMLAttributes, InputHTMLAttributes } from "react";
+import React, { InputHTMLAttributes } from "react";
 import styled from "styled-components";
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   actionLabel: string;
+  isLoading: boolean;
   action: () => void;
 }
 
@@ -46,13 +47,14 @@ const InputGroup: React.FC<Props> = ({
   label,
   actionLabel,
   action,
+  isLoading,
   ...inputProps
 }) => (
   <Wrapper>
     <h3>{label}</h3>
     <div>
       <input {...inputProps} />
-      <button onClick={action}>{actionLabel}</button>
+      <button onClick={action}>{isLoading ? "Loading..." : actionLabel}</button>
     </div>
   </Wrapper>
 );
