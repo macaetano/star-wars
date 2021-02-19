@@ -5,8 +5,9 @@ import { toggleLoading, toggleStep } from "../app/action-creators";
 import { getStarshipsSuccess } from "./action-creators";
 import { StarshipsTypes } from "./actions";
 import { APIShip, Ship } from "./types";
+import getMGLTPerStop from "../../utils/getMGLTPerStop";
 
-function* getStarships({ payload: { page } }: GetStarships) {
+function* getStarships({ payload: { page, isToggleStep } }: GetStarships) {
   try {
     yield put(toggleLoading());
     // @ts-ignore current redux-saga limitation  info on: https://github.com/redux-saga/redux-saga/pull/2053
@@ -18,12 +19,15 @@ function* getStarships({ payload: { page } }: GetStarships) {
     const payload = yield response.json();
     const list: Ship[] = payload.results.map((apiShip: APIShip) => ({
       ...apiShip,
-      stops: 50,
-      imageURL:
-        "https://cdn.shopify.com/s/files/1/0340/2849/products/Disc-StarWars-DeathStar_651a2d63-1b09-4d53-b69d-09b2feeae155_810x.jpg?v=1582135686",
+      MGLTPerStop: getMGLTPerStop(apiShip),
     }));
-    yield put(getStarshipsSuccess(list));
-    yield put(toggleStep());
+    const nextPage = payload.next
+      ? Number(payload.next.slice(payload.next.length - 1))
+      : null;
+    yield put(getStarshipsSuccess(list, page, nextPage));
+    if (isToggleStep) {
+      yield put(toggleStep());
+    }
   } catch (e) {
     console.log(e);
   } finally {

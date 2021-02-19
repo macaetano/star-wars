@@ -1,8 +1,10 @@
+import { bindActionCreators } from "redux";
 import { StarshipsTypes, StarshipActions } from "./actions";
 import { StarshipsState } from "./types";
 
 const INITIAL_STATE: StarshipsState = {
-  ships: [],
+  pages: undefined,
+  nextPage: 2,
 };
 
 const reducers = (
@@ -13,7 +15,11 @@ const reducers = (
     case StarshipsTypes.GET_STARSHIPS_SUCCESS:
       return {
         ...state,
-        ships: [...state.ships, ...action.payload.ships],
+        nextPage: action.payload.nextPage,
+        pages: {
+          ...state.pages,
+          [action.payload.page]: action.payload.ships,
+        },
       };
     default:
       return state;

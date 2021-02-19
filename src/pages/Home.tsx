@@ -49,13 +49,19 @@ const Home = () => {
   const [value, setValue] = useState("");
 
   const { step, isLoading } = useSelector((state: StoreState) => state.app);
+  const pages = useSelector((state: StoreState) => state.starships.pages);
+
   const dispatch = useDispatch();
 
   const onChangeValue = (event: React.ChangeEvent<HTMLInputElement>) =>
     setValue(event.target.value);
 
   const handleAction = () => {
-    dispatch(getStarships(1));
+    if (pages) {
+      dispatch(toggleStep());
+    } else {
+      dispatch(getStarships(1));
+    }
   };
 
   return (
@@ -73,12 +79,7 @@ const Home = () => {
         />
       </div>
       <div className={step === "list" ? "list open" : "list closed"}>
-        <img
-          src="./icons/back.png"
-          alt="Back Button"
-          onClick={() => dispatch(toggleStep())}
-        />
-        <ShipList />
+        <ShipList totalDistance={value} />
       </div>
     </Container>
   );

@@ -1,11 +1,14 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { Ship } from "../store/starships/types";
+import { toggleStep } from "../store/app/action-creators";
+import { getStarships } from "../store/starships/action-creators";
 import { StoreState } from "../store/types";
+import Paginator from "./styles/Paginator";
 
 interface ShipItemProps {
-  item: Ship;
+  name: string;
+  stops: number | string;
 }
 
 const StyledContainer = styled.div<{ divider?: boolean }>`
@@ -18,41 +21,82 @@ const StyledContainer = styled.div<{ divider?: boolean }>`
   p {
     font-size: 18px;
   }
-  .image {
-    width: 75px;
-    height: 75px;
-  }
   .name {
     flex: 1;
-    margin-left: 16px;
   }
   .stops {
     color: #edec51;
   }
 `;
 
-const ShipItem: React.FC<ShipItemProps> = ({ item }) => (
+const ShipItem: React.FC<ShipItemProps> = ({ name, stops }) => (
   <div>
     <StyledContainer divider>
-      <img className="image" src={item.imageURL} alt={item.name} />
-      <p className="name">{item.name}</p>
-      <p className="stops">{item.stops}</p>
+      <p className="name">{name}</p>
+      <p className="stops">{stops}</p>
     </StyledContainer>
   </div>
 );
 
-const ShipList: React.FC = () => {
-  const ships = useSelector((state: StoreState) => state.starships.ships);
+interface ShipListProps {
+  totalDistance: string;
+}
+
+const ShipList: React.FC<ShipListProps> = ({ totalDistance }) => {
+  const [currentPageIndex, setCurrentPageIndex] = useState(1);
+  const dispatch = useDispatch();
+  const { pages, nextPage } = useSelector(
+    (state: StoreState) => state.starships
+  );
+
+  const onClickPage = (page: string) => setCurrentPageIndex(Number(page));
+  const onClickNext = (page: number) => {
+    dispatch(getStarships(page, false));
+    setCurrentPageIndex(page);
+  };
+  const onClickBack = () => {
+    dispatch(toggleStep());
+    setCurrentPageIndex(1);
+  };
+
+  const renderPage = () => {
+    if (pages && pages[currentPageIndex]) {
+      return (
+        <>
+          {pages[currentPageIndex].map((item, index) => (
+            <ShipItem
+              key={index}
+              name={item.name}
+              stops={
+                item.MGLTPerStop !== "unknown"
+                  ? Math.floor(Number(totalDistance) / item.MGLTPerStop)
+                  : "Unknown"
+              }
+            />
+          ))}
+        </>
+      );
+    } else return <h3>Loading</h3>;
+  };
   return (
     <div>
+      <img src="./icons/back.png" alt="Back Button" onClick={onClickBack} />
       <StyledContainer>
-        <div className="image"></div>
         <p className="name">Name</p>
         <p className="stops">Stops</p>
       </StyledContainer>
-      {ships.map((item, index) => (
-        <ShipItem key={index} item={item} />
-      ))}
+      {pages && (
+        <React.Fragment>
+          {renderPage()}
+          <Paginator
+            nextPage={nextPage}
+            pages={Object.keys(pages)}
+            currentPage={currentPageIndex}
+            onClickNext={onClickNext}
+            onClickPage={onClickPage}
+          />
+        </React.Fragment>
+      )}
     </div>
   );
 };

@@ -20,10 +20,13 @@ export interface APIShip {
 }
 
 export interface Ship extends APIShip {
-  stops: number;
-  imageURL: string;
+  MGLTPerStop: number | "unknown";
 }
 
+export type Page = { [key: number]: Ship[] };
+
+export type NextPage = null | number;
 export interface StarshipsState {
-  ships: Ship[];
+  pages?: Page;
+  nextPage: NextPage;
 }
