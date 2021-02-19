@@ -49,14 +49,30 @@ const InputGroup: React.FC<Props> = ({
   action,
   isLoading,
   ...inputProps
-}) => (
-  <Wrapper>
-    <h3>{label}</h3>
-    <div>
-      <input {...inputProps} />
-      <button onClick={action}>{isLoading ? "Loading..." : actionLabel}</button>
-    </div>
-  </Wrapper>
-);
+}) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      submit();
+    }
+  };
+
+  const submit = () => {
+    if (Number(inputProps.value) <= 0 || inputProps === "") {
+      alert("Invalid Value");
+    } else action();
+  };
+
+  return (
+    <Wrapper>
+      <h3>{label}</h3>
+      <div>
+        <input {...inputProps} onKeyDown={handleKeyDown} />
+        <button onClick={submit}>
+          {isLoading ? "Loading..." : actionLabel}
+        </button>
+      </div>
+    </Wrapper>
+  );
+};
 
 export default InputGroup;
