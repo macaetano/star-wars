@@ -10,6 +10,6 @@
 
 ### How to run
 
-Get the code -> git clone https://github.com/macaetano/star-wars.git
-Install the dependecies -> `yarn`
-Run -> `yarn start`
+-Get the code -> git clone https://github.com/macaetano/star-wars.git
+-Install the dependecies -> `yarn`
+-Run -> `yarn start`
