@@ -6,15 +6,13 @@ import { getStarshipsSuccess } from "./action-creators";
 import { StarshipsTypes } from "./actions";
 import { APIShip, Ship } from "./types";
 import getMGLTPerStop from "../../utils/getMGLTPerStop";
+import { API_URL } from "../../utils/constants";
 
 function* getStarships({ payload: { page, isToggleStep } }: GetStarships) {
   try {
     yield put(toggleLoading());
     // @ts-ignore current redux-saga limitation  info on: https://github.com/redux-saga/redux-saga/pull/2053
-    const response = yield call(
-      fetch,
-      `https://swapi.dev/api/starships/?page=${page}`
-    );
+    const response = yield call(fetch, `${API_URL}${page}`);
     // @ts-ignore current redux-saga limitation  info on: https://github.com/redux-saga/redux-saga/pull/2053
     const payload = yield response.json();
     const list: Ship[] = payload.results.map((apiShip: APIShip) => ({
@@ -29,7 +27,7 @@ function* getStarships({ payload: { page, isToggleStep } }: GetStarships) {
       yield put(toggleStep());
     }
   } catch (e) {
-    console.log(e);
+    alert(e);
   } finally {
     yield put(toggleLoading());
   }

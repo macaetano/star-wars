@@ -1,9 +1,10 @@
 import { APIShip } from "../store/starships/types";
-
-const HOURS_IN_YEAR = 8760;
-const HOURS_IN_MONTH = 730;
-const HOURS_IN_WEEK = 168;
-const HOURS_IN_DAY = 24;
+import {
+  HOURS_IN_YEAR,
+  HOURS_IN_MONTH,
+  HOURS_IN_WEEK,
+  HOURS_IN_DAY,
+} from "./constants";
 
 const getMGLTPerStop = ({ MGLT, consumables }: APIShip) => {
   if (MGLT === "unknown" || consumables === "unknown") {

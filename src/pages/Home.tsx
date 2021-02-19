@@ -50,7 +50,6 @@ const Home = () => {
 
   const { step, isLoading } = useSelector((state: StoreState) => state.app);
   const pages = useSelector((state: StoreState) => state.starships.pages);
-
   const dispatch = useDispatch();
 
   const onChangeValue = (event: React.ChangeEvent<HTMLInputElement>) =>
