@@ -1,5 +1,9 @@
 # Star Wars
 
+Simple app to calculate star wars MGLT travels using [Star Wars API](https://swapi.dev/).
+
+### [Try it now via Github Pages 🚀](https://macaetano.github.io/star-wars)
+
 ### Tech Stack
 
 - TypeScript
